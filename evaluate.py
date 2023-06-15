@@ -1,11 +1,19 @@
+# import os
+# os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
+import os
 import argparse
 import sys
 
+import numpy as np
 import torch
 import torch.backends.cudnn
 import torch.cuda
 import torch.nn
 import torch.utils.data
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 from torchpack import distributed as dist
 from torchpack.callbacks import Callbacks, SaverRestore
 from torchpack.environ import auto_set_run_dir, set_run_dir
@@ -24,16 +32,22 @@ def main() -> None:
     parser.add_argument('config', metavar='FILE', help='config file')
     parser.add_argument('--run-dir', metavar='DIR', help='run directory')
     parser.add_argument('--name', type=str, help='model name')
+    parser.add_argument('--save-dir', type=str, help='save directory of `.label` files')
     args, opts = parser.parse_known_args()
+
+    for i in range(11):
+        directory_name = f"{i:02d}"  # format the number as a two-digit string
+        if not os.path.exists(args.save_dir + "/" + directory_name):
+            os.makedirs(args.save_dir + "/" + directory_name)
 
     configs.load(args.config, recursive=True)
     configs.update(opts)
 
     if configs.distributed:
-        dist.init()
+       dist.init()
 
-        torch.backends.cudnn.benchmark = True
-        torch.cuda.set_device(dist.local_rank())
+       torch.backends.cudnn.benchmark = True
+       torch.cuda.set_device(dist.local_rank())
 
     if args.run_dir is None:
         args.run_dir = auto_set_run_dir()
@@ -105,6 +119,7 @@ def main() -> None:
                     _inputs[key] = value.cuda()
 
             inputs = _inputs['lidar']
+
             targets = feed_dict['targets'].F.long().cuda(non_blocking=True)
             outputs = model(inputs)
 
@@ -125,6 +140,12 @@ def main() -> None:
             output_dict = {'outputs': outputs, 'targets': targets}
             trainer.after_step(output_dict)
 
+            abs_input_path = feed_dict['file_name'][0].split("/")
+            output_file_name = args.save_dir + "/" + abs_input_path[-3] + "/" + abs_input_path[-1].replace('.bin', '.label')
+            sem = outputs.cpu().numpy().astype(np.uint32)
+            ins = np.zeros_like(sem).astype(np.uint32)
+            pred_eval = sem + (ins << 16)
+            pred_eval.astype(np.uint32).tofile(output_file_name)
         trainer.after_epoch()
 
 

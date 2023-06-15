@@ -6,6 +6,28 @@
 
 [Haotian Tang\*](http://kentang.net/), [Zhijian Liu\*](http://zhijianliu.com/), Shengyu Zhao, Yujun Lin, [Ji Lin](http://linji.me/), [Hanrui Wang](http://hanruiwang.me/), [Song Han](https://songhan.mit.edu/)
 
+---
+
+OpenMPI 설치해야 함!
+
+```commandline
+tar -xvf openmpi-4.1.1.tar.gz   
+./configure --prefix=/usr/local  
+sudo make all install    
+mpirun
+```
+그 후 conda 환경 세팅 
+```
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install numba opencv
+pip install backports.cached_property backports.weakref
+pip install torchpack
+pip install --upgrade git+https://github.com/mit-han-lab/torchsparse.git
+```
+
+* `datasets/semantic_kitti.py`의 125~126번 째 줄 주석처리를 해제하면 주우우욱 뽑을 수 있음!
+
+---
 ECCV 2020
 
 <img src="https://hanlab.mit.edu/projects/spvnas/figures/spvnas_vs_mink.gif" width="1080">

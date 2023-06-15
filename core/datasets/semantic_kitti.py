@@ -122,6 +122,8 @@ class SemanticKITTIInternal:
                 self.seqs.append('08')
         elif self.split == 'val':
             self.seqs = ['08']
+            # self.seqs = ['00', '02', '05', '06', '07', '08'
+            # ]
         elif self.split == 'test':
             self.seqs = [
                 '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21'
