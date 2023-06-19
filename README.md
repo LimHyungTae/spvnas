@@ -26,6 +26,13 @@ pip install --upgrade git+https://github.com/mit-han-lab/torchsparse.git
 ```
 
 * `datasets/semantic_kitti.py`의 125~126번 째 줄 주석처리를 해제하면 주우우욱 뽑을 수 있음!
+* 예시 명령어들 (MulRan에서 estimation할 때)
+ 
+```commandline
+torchpack dist-run -np 1 python evaluate.py configs/mulran/default.yaml --name SemanticKITTI_val_SPVNAS@65GMACs --dataset.root /home/shapelim/git/spvnas/dataset/mulran --save-dir /media/shapelim/UX980/UX960NVMe/mulran_labels/spvnas
+torchpack dist-run -np 1 python evaluate.py configs/mulran/default.yaml --name SemanticKITTI_val_SPVCNN@119GMACs --dataset.root /home/shapelim/git/spvnas/dataset/mulran --save-dir /media/shapelim/UX980/UX960NVMe/mulran_labels/spvcnn
+torchpack dist-run -np 1 python evaluate.py configs/mulran/default.yaml --name SemanticKITTI_val_MinkUNet@114GMACs --dataset.root /home/shapelim/git/spvnas/dataset/mulran --save-dir /media/shapelim/UX980/UX960NVMe/mulran_labels/mink
+```
 
 ---
 ECCV 2020

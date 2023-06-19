@@ -116,25 +116,25 @@ class SemanticKITTIInternal:
         self.seqs = []
         if split == 'train':
             self.seqs = [
-                '00', '01', '02', '03', '04', '05', '06', '07', '09', '10'
+                'DCC01'
             ]
             if self.google_mode or trainval:
                 self.seqs.append('08')
         elif self.split == 'val':
-            self.seqs = ['08']
+            self.seqs = ["KAIST02", "KAIST03", "Riverside01", "Riverside02", "Riverside03"]
             # self.seqs = ['00', '02', '05', '06', '07', '08'
             # ]
         elif self.split == 'test':
             self.seqs = [
-                '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21'
+                'DCC01'
             ]
 
         self.files = []
         for seq in self.seqs:
             seq_files = sorted(
-                os.listdir(os.path.join(self.root, seq, 'velodyne')))
+                os.listdir(os.path.join(self.root, seq, 'Ouster')))
             seq_files = [
-                os.path.join(self.root, seq, 'velodyne', x) for x in seq_files
+                os.path.join(self.root, seq, 'Ouster', x) for x in seq_files
             ]
             self.files.extend(seq_files)
 

@@ -35,8 +35,9 @@ def main() -> None:
     parser.add_argument('--save-dir', type=str, help='save directory of `.label` files')
     args, opts = parser.parse_known_args()
 
-    for i in range(11):
-        directory_name = f"{i:02d}"  # format the number as a two-digit string
+    # for i in range(11):
+    #     directory_name = f"{i:02d}"  # format the number as a two-digit string
+    for directory_name in ["DCC01", "DCC02", "DCC03", "KAIST02", "KAIST03", "Riverside01", "Riverside02", "Riverside03"]:
         if not os.path.exists(args.save_dir + "/" + directory_name):
             os.makedirs(args.save_dir + "/" + directory_name)
 
